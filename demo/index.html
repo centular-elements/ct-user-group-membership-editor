@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>ct-user-group-membership-editor demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../ct-user-group-membership-editor.html">
+    <link rel="import" href="../../ct-core-utils/ct-config.html">
+    <link rel="import" href="../../ct-core-utils/ct-component-demo-identity.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic ct-user-group-membership-editor demo</h3>
+      <demo-snippet>
+        <template>
+          <ct-component-demo-identity
+                  token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI3MzU1MTg4NjFlODY0ZjRlODlhNzc5NDY4ZmE0ZWIyYyIsImRpZCI6ImFlZDY5YjdlLTQ5ZjEtNDIyZi04MThiLTBmZjUzMDM3NTQ2YSIsImNpZCI6IjJhYzVhNTVjLWZhZjAtNDQ5OC1iNWI1LTU1ODMwMGNiYzFmZSIsInVpZCI6IjU4ZTQ2MzdmLWUyYzgtNDJmYS1iNGI1LTdlMTk2YWJmNWJhOSIsImp0aSI6IjA3OWNlYjViLWE1MGItNDNkYS04NThjLWU2M2I4MGZlYWM0YSIsImV4cCI6MTQ5NzAxMzkwMn0.UMg9NXNfGN21q9K1HeLle0f0wVOd1h9J-JKIuC5a6ok"
+          ></ct-component-demo-identity>
+
+          <ct-user-group-membership-editor
+                  root-user-group-id="aed69b7e-49f1-422f-818b-0ff53037546a"
+                  member-of-groups='[{"id":"861e9609-20b9-4cda-8b64-b53f5413df77", "name":"Administrators"}, {"id":"06b1a7be-87b4-4945-ae1f-f9b5f4338772", "name":"Support Managers"}, {"id":"322b9d97-968a-41dd-a1e8-b19c97c1dd21", "name":"Support Agents"}]'>
+          </ct-user-group-membership-editor>
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "ct-user-group-membership-editor",
+  "description": "Element used for user group membership editing",
+  "main": "ct-user-group-membership-editor.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "iron-icon": "PolymerElements/iron-icon",
+    "paper-button": "PolymerElements/paper-button",
+    "ct-paper-tree": "centular-elements/ct-paper-tree",
+    "ct-user-groups-api": "centular-elements/ct-user-groups-api",
+    "ct-core-utils": "centular-elements/ct-core-utils"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}

@@ -1,0 +1,170 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/maps-icons.html">
+<link rel="import" href="../iron-icons/social-icons.html">
+
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-material/paper-material.html">
+
+<link rel="import" href="../ct-paper-tree/ct-paper-tree.html">
+<link rel="import" href="../ct-user-api/ct-user-api.html">
+<link rel="import" href="../ct-user-groups-api/ct-user-groups-api.html">
+<link rel="import" href="../ct-core-utils/ct-api-consumer-behaviour.html">
+
+<!--
+`ct-user-group-membership-editor`
+Element used for user group membership editing
+
+@demo demo/index.html 
+-->
+
+<dom-module id="ct-user-group-membership-editor">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      @keyframes blinker {
+        50% { opacity: 0; }
+      }
+      #tree {
+        --ct-paper-tree-toggle-theme: {
+          animation: blinker 1s linear infinite;
+          content: '⧖';
+          margin-left: -21px;
+        };
+      }
+      paper-material {
+        padding: 10px;
+        padding-right: 30px;
+      }
+    </style>
+
+    <ct-user-groups-api id="userGroupsApi"></ct-user-groups-api>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-6">
+          <h4>Member Of</h4>
+          <table class="table table-striped table-hover table-condensed">
+            <tbody>
+              <template is="dom-repeat" items="[[ memberOfGroups ]]">
+                <tr>
+                  <td class="align-middle"><iron-icon icon="icons:supervisor-account"></iron-icon></td>
+                  <td class="align-middle">[[item.name]]</td>
+                  <td class="align-middle">
+                    <iron-icon
+                            class="btn btn-danger btn-xs"
+                            icon="icons:cancel"
+                            on-tap="_leaveGroupTapped"
+                            hidden$="[[disabled]]">
+                    </iron-icon>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-xs-6" hidden$="[[disabled]]">
+          <h4>System Groups</h4>
+          <paper-material elevation="1">
+            <ct-paper-tree id="tree" data="[[ _rootNodes ]]" actions="[[ _actions ]]"></ct-paper-tree>
+          </paper-material>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'ct-user-group-membership-editor',
+
+      properties: {
+        rootUserGroupId: String,
+        memberOfGroups: {
+          type: Array,
+          notify: true
+        },
+        disabled: Boolean
+      },
+
+      listeners: {
+        'loadChildren': '_loadChildren',
+        'join': '_onJoin'
+      },
+
+      observers: ['_init(rootUserGroupId, memberOfGroups)'],
+
+      _init: function() {
+        if (!this._initialised) {
+          this._initialised = true;
+          this._actions = [{
+            label: 'Join',
+            icon: 'social:person-add',
+            event: 'join'
+          }];
+
+          this._getUserGroups(this.rootUserGroupId, function (userGroups) {
+            this._rootNodes = this._mapUserGroupsToTreeNodes(userGroups);
+          }.bind(this));
+        }
+      },
+
+      _getUserGroups: function(parentId, groupsReceivedCallback) {
+        this.$.userGroupsApi.getUserGroups(parentId, 0, 20)
+                .then(function(request) {
+                  groupsReceivedCallback(request.response.results)
+                })
+                .catch(function (error) {
+                  console.log(error)
+                }.bind(this));
+      },
+
+      _mapUserGroupsToTreeNodes: function(userGroups) {
+        return userGroups.map(function(userGroup) {
+          return {
+            id: userGroup.id,
+            name: userGroup.name,
+            icon: "social:group"
+          }
+        }.bind(this))
+      },
+
+      _loadChildren: function(event) {
+        var userGroupNode = event.detail;
+        if (userGroupNode.data.id !== null && userGroupNode.data.id !== undefined) {
+          this._setLoadingState(userGroupNode, true);
+          this._getUserGroups(userGroupNode.data.id, function (userGroups) {
+            userGroupNode.set('data.children', this._mapUserGroupsToTreeNodes(userGroups));
+            this._setLoadingState(userGroupNode, false);
+          }.bind(this));
+        }
+      },
+
+      _setLoadingState: function(node, enabled) {
+        if (enabled) {
+          node.customStyle['--ct-paper-tree-toggle-theme'] = 'animation: blinker 1s linear infinite; content: \'⧖\'; margin-left: -21px;';
+        } else {
+          node.customStyle['--ct-paper-tree-toggle-theme'] = ';';
+        }
+        node.updateStyles();
+      },
+
+      _onJoin: function(event) {
+        var groupNode = event.detail;
+        if (this.memberOfGroups.find(function(group) { return group.id == groupNode.data.id }) == null) {
+          this.memberOfGroups = this.memberOfGroups.concat([{id: groupNode.data.id, name: groupNode.data.name}]);
+        }
+      },
+
+      _leaveGroupTapped: function(event) {
+        this.memberOfGroups = this.memberOfGroups.filter(function (group) {
+          return group.id !== event.model.item.id;
+        });
+      }
+    });
+  </script>
+</dom-module>
