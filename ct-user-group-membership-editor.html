@@ -50,19 +50,19 @@ Element used for user group membership editing
           <h4>Member Of</h4>
           <table class="table table-striped table-hover table-condensed">
             <tbody>
-              <template is="dom-repeat" items="[[ memberOfGroups ]]">
-                <tr>
-                  <td class="align-middle"><iron-icon icon="icons:supervisor-account"></iron-icon></td>
-                  <td class="align-middle">[[item.name]]</td>
-                  <td class="align-middle" hidden$="[[disabled]]">
-                    <iron-icon
-                            class="btn btn-danger btn-xs"
-                            icon="icons:cancel"
-                            on-tap="_leaveGroupTapped"
-                    ></iron-icon>
-                  </td>
-                </tr>
-              </template>
+            <template is="dom-repeat" items="[[ memberOfGroups ]]">
+              <tr>
+                <td class="align-middle"><iron-icon icon="icons:supervisor-account"></iron-icon></td>
+                <td class="align-middle">[[item.name]]</td>
+                <td class="align-middle" hidden$="[[ _exitGroupCommandHidden ]]">
+                  <iron-icon
+                          class="btn btn-danger btn-xs"
+                          icon="icons:cancel"
+                          on-tap="_leaveGroupTapped"
+                  ></iron-icon>
+                </td>
+              </tr>
+            </template>
             </tbody>
           </table>
         </div>
@@ -95,7 +95,7 @@ Element used for user group membership editing
         'join': '_onJoin'
       },
 
-      observers: ['_init(rootUserGroupId, memberOfGroups)'],
+      observers: ['_init(rootUserGroupId, memberOfGroups)', '_computeExitCommandHidden(disabled, memberOfGroups)'],
 
       _init: function() {
         if (!this._initialised) {
@@ -157,6 +157,10 @@ Element used for user group membership editing
         if (this.memberOfGroups.find(function(group) { return group.id == groupNode.data.id }) == null) {
           this.memberOfGroups = this.memberOfGroups.concat([{id: groupNode.data.id, name: groupNode.data.name}]);
         }
+      },
+
+      _computeExitCommandHidden: function() {
+        this._exitGroupCommandHidden = this.disabled || this.memberOfGroups.length === 1;
       },
 
       _leaveGroupTapped: function(event) {
