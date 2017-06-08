@@ -37,8 +37,7 @@ Element used for user group membership editing
         };
       }
       paper-material {
-        padding: 10px;
-        padding-right: 30px;
+        padding: 10px 30px 10px 10px;
       }
     </style>
 
@@ -54,13 +53,12 @@ Element used for user group membership editing
                 <tr>
                   <td class="align-middle"><iron-icon icon="icons:supervisor-account"></iron-icon></td>
                   <td class="align-middle">[[item.name]]</td>
-                  <td class="align-middle">
+                  <td class="align-middle" hidden$="[[disabled]]">
                     <iron-icon
                             class="btn btn-danger btn-xs"
                             icon="icons:cancel"
                             on-tap="_leaveGroupTapped"
-                            hidden$="[[disabled]]">
-                    </iron-icon>
+                    ></iron-icon>
                   </td>
                 </tr>
               </template>
