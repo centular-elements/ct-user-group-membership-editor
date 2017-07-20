@@ -113,7 +113,7 @@ Element used for user group membership editing
       },
 
       _getUserGroups: function(parentId, groupsReceivedCallback) {
-        this.$.userGroupsApi.getUserGroups(parentId, 0, 20)
+        this.$.userGroupsApi.getUserGroups(parentId, 1, 20)
                 .then(function(request) {
                   groupsReceivedCallback(request.response.results)
                 })
